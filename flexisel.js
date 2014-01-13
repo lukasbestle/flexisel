@@ -2,7 +2,7 @@
  * Flexisel
  * Simple carousel without any complicated stuff around it
  * 
- * @version   0.8 (02.01.2014)
+ * @version   0.9 (13.01.2014)
  * @author    Lukas Bestle <lukas@lu-x.me>
  * @copyright Lukas Bestle
  * @link      https://github.com/vis7mac/flexisel

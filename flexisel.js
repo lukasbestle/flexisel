@@ -155,13 +155,15 @@ var Flexisel = function(carousel, options) {
 	 */
 	buttons.forEach(function(item) {
 		item.onclick = function() {
-			self.set(this);
+			var success = self.set(this);
 			
-			// Stop automatic rotation for a time
-			self.lastManual = new Date().getTime();
-		
-			// Prevent reloading the page
-			return false;
+			if(success) {
+				// Stop automatic rotation for a time
+				self.lastManual = new Date().getTime();
+			
+				// Prevent reloading the page
+				return false;
+			}
 		};
 	}.bind(this));
 	

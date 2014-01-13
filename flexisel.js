@@ -96,8 +96,19 @@ var Flexisel = function(carousel, options) {
 		addClass(stage, this.options.stageChangingClass);
 		
 		setTimeout(function() {
+			var outerHTML = function(node) {
+				return node.outerHTML || (
+				function(n) {
+					var div = document.createElement('div'), h;
+					div.appendChild(n.cloneNode(true));
+					h = div.innerHTML;
+					div = null;
+					return h;
+				}(node));
+			};
+			
 			// Load the new content
-			stage.innerHTML = linkObject.outerHTML;
+			stage.innerHTML = outerHTML(linkObject);
 			
 			// Show the stage again
 			setTimeout(function() {

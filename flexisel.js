@@ -2,7 +2,7 @@
  * Flexisel
  * Simple carousel without any complicated stuff around it
  * 
- * @version   0.9 (13.01.2014)
+ * @version   1.0 (16.02.2014)
  * @author    Lukas Bestle <lukas@lu-x.me>
  * @copyright Lukas Bestle
  * @link      https://github.com/vis7mac/flexisel
@@ -20,8 +20,11 @@ var Flexisel = function(carousel, options) {
 	    stage,
 	    listItems,
 	    buttons,
+	    
 	    addClass,
-	    removeClass;
+	    removeClass,
+	    outerHTML,
+	    childOf;
 	
 	// Expose default options
 	this.options = {
@@ -31,9 +34,10 @@ var Flexisel = function(carousel, options) {
 		changeTime:         400,        // Time to wait between hiding and showing the stage
 		
 		// Selectors
-		stage:              '.stage',   // Selector of the stage within a carousel
-		listItems:          'li',       // Possible list items
-		buttons:            'li a',     // Buttons in the item list which are transferred to the stage
+		stage:              '.stage',   // Stage within a carousel
+		listItems:          'li',       // Possible list items (can get "active")
+		buttons:            'a',        // Elements the onclick event is applied to (children of listItems)
+		transfer:           'a',        // Items transferred to the stage (children of listItems)
 		
 		// Class names
 		stageChangingClass: 'changing', // Class attached to the stage while changing its content
@@ -44,6 +48,7 @@ var Flexisel = function(carousel, options) {
 		                                // can return false to prevent setting an item
 		
 		// Other options
+		noHover:            false,      // Ignore hover ("rotate under the mouse cursor")
 		debug:              false       // Debug mode (print to console each time the item is changed)
 	};
 	
@@ -59,30 +64,62 @@ var Flexisel = function(carousel, options) {
 	// Get required stuff from the DOM
 	stage     =                            carousel.querySelector   (this.options.stage);
 	listItems = Array.prototype.slice.call(carousel.querySelectorAll(this.options.listItems));
-	buttons   = Array.prototype.slice.call(carousel.querySelectorAll(this.options.buttons));
+	buttons   = Array.prototype.slice.call(carousel.querySelectorAll(this.options.listItems + ((this.options.buttons)? ' ' + this.options.buttons : '')));
 	
 	// Expose status stuff
-	this.current         = 0;     // Current item ID in "buttons" (zero-based)
-	this.lastManual      = 0;     // Last time stamp when the user clicked manually
-	this.hovered         = false; // Is the user currently hovering the carousel?
+	this.current    = 0;     // Current item ID in "listItems" (zero-based)
+	this.lastManual = 0;     // Last time stamp when the user clicked manually
+	this.hovered    = false; // Is the user currently hovering the carousel?
 	
 	/**
 	 * Set the carousel to show a specific item
 	 * 
-	 * @param  object link The object of the item in the list which should be transferred; if not given: "next item"
-	 * @return boolean     Did it work?
+	 * @param  object newItem The new item (possible: a) object of a button, b) object of a list item, numerical ID) which should be transferred to the stage; if not given: "next item"
+	 * @return boolean        Did it work?
 	 */
-	this.set = function(link) {
-		// If no specific link is given, just increase by one
-		var linkObject = (link === undefined)? buttons[(this.current === buttons.length - 1)? 0 : this.current + 1] : link;
+	this.set = function(newItem) {
+		var listItemObject, transferObject;
 		
-		// Ask the callback if we should do it right now
-		if(typeof this.options.setCallback === 'function' && !this.options.setCallback(link)) {
+		// Check if there are any list items
+		if(listItems.length === 0) {
 			return false;
 		}
 		
-		// Check if the link is the current one
-		if(buttons.indexOf(linkObject) === this.current) {
+		// Get the list item we want to change to
+		if(newItem === undefined) {
+			// Increase by one
+			listItemObject = listItems[(this.current === listItems.length - 1)? 0 : this.current + 1];
+		} else if(typeof newItem === 'number') {
+			// Get specific item
+			listItemObject = listItems[newItem];
+		} else if(typeof newItem === 'object') {
+			// Loop through all list items to find the passed object
+			listItems.every(function(item) {
+				// List item was passed OR
+				// Button    was passed
+				if(item === newItem || childOf(newItem, item)) {
+					listItemObject = item;
+					return false;
+				}
+				
+				// Continue loop
+				return true;
+			});
+		} else {
+			// Error
+			throw '[Flexisel] Invalid value for "newItem".';
+		}
+		
+		// Get the transfer object
+		transferObject = listItemObject.querySelector(this.options.transfer);
+		
+		// Ask the callback if we should do it right now
+		if(typeof this.options.setCallback === 'function' && !this.options.setCallback(listItemObject)) {
+			return false;
+		}
+		
+		// Check if the list item is the current one
+		if(listItems.indexOf(listItemObject) === this.current) {
 			return false;
 		}
 		
@@ -90,25 +127,14 @@ var Flexisel = function(carousel, options) {
 		listItems.forEach(function(item) {
 			removeClass(item, this.options.activeClass);
 		}.bind(this));
-		addClass(linkObject.parentNode, this.options.activeClass);
+		addClass(listItemObject, this.options.activeClass);
 		
 		// Hide the old content
 		addClass(stage, this.options.stageChangingClass);
 		
 		setTimeout(function() {
-			var outerHTML = function(node) {
-				return node.outerHTML || (
-				function(n) {
-					var div = document.createElement('div'), h;
-					div.appendChild(n.cloneNode(true));
-					h = div.innerHTML;
-					div = null;
-					return h;
-				}(node));
-			};
-			
 			// Load the new content
-			stage.innerHTML = outerHTML(linkObject);
+			stage.innerHTML = outerHTML(transferObject);
 			
 			// Show the stage again
 			setTimeout(function() {
@@ -117,11 +143,11 @@ var Flexisel = function(carousel, options) {
 		}.bind(this), this.options.changeTime / 2);
 		
 		// Save the current item
-		this.current = buttons.indexOf(linkObject);
+		this.current = listItems.indexOf(listItemObject);
 		
 		// Debug
 		if(this.options.debug) {
-			console.log('[Flexisel] Changed to item ' + this.current + ', which was ' + ((link === undefined)? 'the next item' : 'requested') + '.');
+			console.log('[Flexisel] Changed to item ' + this.current + ', which was ' + ((newItem === undefined)? 'the next item' : 'requested') + '.');
 		}
 		
 		return true;
@@ -170,13 +196,15 @@ var Flexisel = function(carousel, options) {
 	/**
 	 * Detect hovers
 	 */
-	carousel.onmouseover = function() {
-		this.hovered = true;
-	}.bind(this);
-	
-	carousel.onmouseout = function() {
-		this.hovered = false;
-	}.bind(this);
+	if(!this.options.noHover) {
+		carousel.onmouseover = function() {
+			this.hovered = true;
+		}.bind(this);
+		
+		carousel.onmouseout = function() {
+			this.hovered = false;
+		}.bind(this);
+	}
 	
 	/**
 	 * Helper functions
@@ -187,5 +215,22 @@ var Flexisel = function(carousel, options) {
 
 	removeClass = function(element, className) {
 		element.className = element.className.replace(new RegExp('(\\s|^)' + className + '(\\s|$)'), ' ').replace(/^\s+|\s+$/g, '');
+	};
+	
+	outerHTML = function(node) {
+		return node.outerHTML || (
+		function(node) {
+			var div = document.createElement('div'), html;
+			
+			div.appendChild(node.cloneNode(true));
+			html = div.innerHTML;
+			
+			return html;
+		}(node));
+	};
+	
+	childOf = function(child, parent) {
+		while((child = child.parentNode) && child !== parent) {}
+		return !!child;
 	};
 };

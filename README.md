@@ -15,7 +15,7 @@ Also, I want to learn advanced JS, so building this without jQuery was good for 
 ## Features
 
 - based on a list of links which can include just about any HTML content (images, text etc.) and a "stage" where the active item is transferred to
-- hides the stage using a custom class name, which will get attached when the stage changes (you will do something like `opacity: 0;` for that class)
+- hides the stage using a custom class name, which will get attached when the stage changes (you will do something like `opacity: 0;` combined with transitions for that class)
 - automatically rotates the items in a specified interval
 - can be triggered manually by the user (clicking an item) or by the developer (`Flexisel.set()` method)
 - can exist multiple times on a page
@@ -26,14 +26,14 @@ Also, I want to learn advanced JS, so building this without jQuery was good for 
 ## Flexisel is:
 
 - a simple carousel framework
-- less than 900 bytes minified and gzipped (!)
+- 1.17 KB minified and gzipped (!)
 - totally flexible, as it doesn't require any other libraries
 
 ## Flexisel is *not*:
 
 - packed with any CSS or images, so it can be highly configured
 - one of these amazing 3D rotation carousels as the possible items are separate from the "stage"
-- usable out-of-the-box
+- usable out-of-the-box™
 - working in stone-age browsers (requires `document.querySelector` and `Function.bind()`)
 
 ## Usage

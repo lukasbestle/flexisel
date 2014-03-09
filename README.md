@@ -12,6 +12,9 @@ I found out that I don't need jQuery in my daily life - it would make my life ea
 So I decided to write basic JS libraries not requiring any other libraries.  
 Also, I want to learn advanced JS, so building this without jQuery was good for me (see "Feedback" below).
 
+Flexisel is the first library in this series.
+I also released [Flexibox](https://github.com/vis7mac/flexisel), a lightbox library.
+
 ## Features
 
 - based on a list of links which can include just about any HTML content (images, text etc.) and a "stage" where the active item is transferred to
@@ -31,7 +34,7 @@ Also, I want to learn advanced JS, so building this without jQuery was good for 
 
 ## Flexisel is *not*:
 
-- packed with any CSS or images, so it can be highly configured
+- packed with any CSS or graphics, so it can be highly configured
 - one of these amazing 3D rotation carousels as the possible items are separate from the "stage"
 - usable out-of-the-box™
 - working in stone-age browsers (requires `document.querySelector` and `Function.bind()`)

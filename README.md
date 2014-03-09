@@ -29,7 +29,7 @@ I also released [Flexibox](https://github.com/vis7mac/flexisel), a lightbox libr
 ## Flexisel is:
 
 - a simple carousel framework
-- 1.17 KB minified and gzipped (!)
+- 1.08 KB minified and gzipped (!)
 - totally flexible, as it doesn't require any other libraries
 
 ## Flexisel is *not*:

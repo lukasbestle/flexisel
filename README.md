@@ -5,15 +5,15 @@
 ## Why
 
 You all know these huge jQuery carousel plugins, right?  
-Besides these 20kB or even more, you also have to include jQuery in your site.
+Besides these 20kB or even more, you also have to include jQuery on your site.
 
-I found out that I don't need jQuery in my daily life - it would make my life easier but I really don't like overhead.
+I found out that I don't need jQuery in my daily life - it would make my life a bit easier but I really don't like overhead.
+Don't get me wrong: Using jQuery can make sense, but not for sites that otherwise don't use much JavaScript.
 
-So I decided to write basic JS libraries not requiring any other libraries.  
-Also, I want to learn advanced JS, so building this without jQuery was good for me (see "Feedback" below).
+So I decided to write basic JS libraries without any dependencies.
 
 Flexisel is the first library in this series.
-I also released [Flexibox](https://github.com/vis7mac/flexisel), a lightbox library.
+I also released [Flexibox](https://git.lukasbestle.com/flexijs/flexibox), a lightbox library.
 
 ## Features
 
@@ -29,15 +29,15 @@ I also released [Flexibox](https://github.com/vis7mac/flexisel), a lightbox libr
 ## Flexisel is:
 
 - a simple carousel framework
-- 1.08 KB minified and gzipped (!)
-- totally flexible, as it doesn't require any other libraries
+- ~ 1KB minified and gzipped (!) with no dependencies
+- totally flexible and customizable
 
 ## Flexisel is *not*:
 
 - packed with any CSS or graphics, so it can be highly configured
-- one of these amazing 3D rotation carousels as the possible items are separate from the "stage"
+- one of these amazing 3D rotation carousels as the clickable items are separate from the "stage"
 - usable out-of-the-box™
-- working in stone-age browsers (requires `document.querySelector` and `Function.bind()`)
+- usable in stone-age browsers (requires `document.querySelector` and `Function.bind()`)
 
 ## Usage
 
@@ -85,9 +85,10 @@ var carousel = new Flexisel(document.getElementById('carousel'), {
 });
 ```
 
-## Feedback
+## Author
 
-I'm truly not a JS professional - but I want to become one.
+- Lukas Bestle <mail@lukasbestle.com>
 
-I tried to comment everything in the Flexisel code, so if you want to support me and are good at JS, I would be really happy if you would give me [feedback on my code](https://twitter.com/lukasbestle).  
-**Thanks!**
+## License
+
+This project was published under the terms of the MIT license. You can find a copy [over at the repository](https://git.lukasbestle.com/flexijs/flexisel/blob/master/LICENSE.md).

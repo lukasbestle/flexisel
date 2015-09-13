@@ -2,11 +2,10 @@
  * Flexisel
  * Simple carousel without any complicated stuff around it
  * 
- * @version   1.0 (16.02.2014)
- * @author    Lukas Bestle <lukas@lu-x.me>
+ * @author    Lukas Bestle <mail@lukasbestle.com>
  * @copyright Lukas Bestle
- * @link      https://github.com/vis7mac/flexisel
- * @license   http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0
+ * @link      https://git.lukasbestle.com/flexijs/flexisel
+ * @license   https://opensource.org/licenses/MIT
  * 
  * @param  object carousel The object of the element you want to init the carousel in
  * @param  object options  Object with configuration options overwriting the default ones
